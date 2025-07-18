@@ -23,7 +23,7 @@ function QsysProvider({ children }: { children: React.ReactNode }) {
       (qrwc: Qrwc, updatedComponent: QsysComponentMap[keyof QsysComponentMap]) => {
         setComponents(prev => ({
           ...prev,
-          [updatedComponent.Name]: updatedComponent,
+          [updatedComponent.name]: updatedComponent,
         }));
       },
       (qrwc: Qrwc) => {

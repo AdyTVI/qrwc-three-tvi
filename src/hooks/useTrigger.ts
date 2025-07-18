@@ -14,17 +14,17 @@ export const useTrigger = ({ componentName, controlName }: useTriggerProps) => {
   const [state, setState] = useState<boolean | null>(null)
 
   useEffect(() => {
-    const control = components?.[componentName]?.Controls?.[controlName]
+    const control = components?.[componentName]?.controls?.[controlName]
     if (!control) return
 
-    const initialValue = control.Value
-    setState(initialValue === '1' || initialValue === 1 || initialValue === true)
+    const initialValue = control.state.Value
+    setState(initialValue === 1)
 
     const interval = setInterval(() => {
-      const currentControl = components?.[componentName]?.Controls?.[controlName]
+      const currentControl = components?.[componentName]?.controls?.[controlName]
       if (currentControl) {
-        const currentValue = currentControl.Value
-        setState(currentValue === '1' || currentValue === 1 || currentValue === true)
+        const currentValue = currentControl.state.Value
+        setState(currentValue === 1)
       }
     }, 100)
 
@@ -32,10 +32,10 @@ export const useTrigger = ({ componentName, controlName }: useTriggerProps) => {
   }, [components, componentName, controlName])
 
   const trigger = () => {
-    const control = components?.[componentName]?.Controls?.[controlName]
+    const control = components?.[componentName]?.controls?.[controlName]
     if (!control || state === null) return
 
-    control.Value = '1' // Trigger pulse
+    control.update("1") // Trigger pulse
   }
 
   return { state, trigger }

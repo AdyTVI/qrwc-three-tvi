@@ -13,13 +13,13 @@ export const useMomentary = ({ componentName, controlName }: UseMomentaryProps) 
 
   const trigger = () => {
     // Safety check: ensure the control exists
-    const control = components?.[componentName]?.Controls?.[controlName]
+    const control = components?.[componentName]?.controls?.[controlName]
     if (!control) return
 
     // Momentary pulse: send "1" (true), then after a short delay, send "0" (false)
-    control.String = "1"
+    control.update("1")
     setTimeout(() => {
-      control.String = "0"
+      control.update("0")
     }, 50) // 100ms pulse duration; adjust if needed
   }
 

@@ -10,7 +10,8 @@ import {
   LuHouse
 } from "react-icons/lu";
 import { useState } from "react";
-import { useMomentary } from "@/hooks/useMomentary";
+//import { useMomentary } from "@/hooks/useMomentary";
+import { useToggle } from "@/hooks/useToggle";
 
 export default function CamerasPage() {
  /*  const { state: isCameraPrivate, toggle: togglePrivacy } = useToggle({
@@ -18,55 +19,55 @@ export default function CamerasPage() {
     controlName: "toggle.privacy",
   }); */
 
-  const { trigger: moveHome } = useMomentary({ componentName: "CameraControl", controlName: "momentary.2" })
+  //const { trigger: moveHome } = useMomentary({ componentName: "CameraControl", controlName: "momentary.2" })
 
-/*   const { state: cameraHomePreset, toggle: moveHome } = useToggle({
-    componentName: "Camera-Bridge",
-    controlName: "preset.home.load",
-  }); */
+  const { toggle: moveHome } = useToggle({
+    componentName: "AverCamera",
+    controlName: "btnHome",
+  });
 
-  const { trigger: moveUp } = useMomentary({ componentName: "CameraControl", controlName: "momentary.5" })
+  //const { trigger: moveUp } = useMomentary({ componentName: "CameraControl", controlName: "momentary.5" })
 
 
-/*   const { state: cameraUp, toggle: moveUp } = useToggle({
-    componentName: "Camera-Bridge",
-    controlName: "tilt.up",
-  }); */
+  const { toggle: moveUp } = useToggle({
+    componentName: "AverCamera",
+    controlName: "btnUp",
+  });
 
-  const { trigger: moveDown} = useMomentary({ componentName: "CameraControl", controlName: "momentary.1" })
+  //const { trigger: moveDown} = useMomentary({ componentName: "CameraControl", controlName: "momentary.1" })
 
-/*   const { state: cameraDown, toggle: moveDown } = useToggle({
-    componentName: "Camera-Bridge",
-    controlName: "tilt.down",
-  }); */
+  const { toggle: moveDown } = useToggle({
+    componentName: "AverCamera",
+    controlName: "btnDown",
+  });
 
-  const { trigger: moveLeft } = useMomentary({ componentName: "CameraControl", controlName: "momentary.3" })
+  //const { trigger: moveLeft } = useMomentary({ componentName: "CameraControl", controlName: "momentary.3" })
 
-/*   const { state: cameraLeft, toggle: moveLeft } = useToggle({
-    componentName: "Camera-Bridge",
-    controlName: "pan.left",
-  }); */
+  const { toggle: moveLeft } = useToggle({
+    componentName: "AverCamera",
+    controlName: "btnLeft",
+  });
 
-  const { trigger: moveRight } = useMomentary({ componentName: "CameraControl", controlName: "momentary.4" })
+  //const { trigger: moveRight } = useMomentary({ componentName: "CameraControl", controlName: "momentary.4" })
 
-/*   const { state: cameraRight, toggle: moveRight } = useToggle({
-    componentName: "Camera-Bridge",
-    controlName: "pan.right",
-  }); */
+  const { toggle: moveRight } = useToggle({
+    componentName: "AverCamera",
+    controlName: "btnRight",
+  });
 
-  const { trigger: zoomIn } = useMomentary({ componentName: "CameraControl", controlName: "momentary.6" })
+  //const { trigger: zoomIn } = useMomentary({ componentName: "CameraControl", controlName: "momentary.6" })
   
-/*   const { state: cameraZoomIn, toggle: zoomIn } = useToggle({
-    componentName: "Camera-Bridge",
-    controlName: "zoom.in",
-  }); */
+  const { toggle: zoomIn } = useToggle({
+    componentName: "AverCamera",
+    controlName: "btnZoomIn",
+  });
 
-  const { trigger: zoomOut } = useMomentary({ componentName: "CameraControl", controlName: "momentary.7" })
+  //const { trigger: zoomOut } = useMomentary({ componentName: "CameraControl", controlName: "momentary.7" })
   
-/*   const { state: cameraZoomOut, toggle: zoomOut } = useToggle({
-    componentName: "Camera-Bridge",
-    controlName: "zoom.out",
-  }); */
+  const { toggle: zoomOut } = useToggle({
+    componentName: "AverCamera",
+    controlName: "btnZoomOut",
+  });
 
   const [isPressed, setIsPressed] = useState({
     cameraHome: false,

@@ -13,17 +13,17 @@ export const useToggle = ({ componentName, controlName }: UseToggleProps) => {
   const [state, setState] = useState<boolean | null>(null)
 
   useEffect(() => {
-    const control = components?.[componentName]?.Controls?.[controlName]
+    const control = components?.[componentName]?.controls?.[controlName]
     if (!control) return
 
-    const initialValue = control.Value
-    setState(initialValue === '1' || initialValue === 1 || initialValue === true)
+    const initialValue = control.state.Value
+    setState(initialValue === 1)
 
     const interval = setInterval(() => {
-      const currentControl = components?.[componentName]?.Controls?.[controlName]
+      const currentControl = components?.[componentName]?.controls?.[controlName]
       if (currentControl) {
-        const currentValue = currentControl.Value
-        setState(currentValue === '1' || currentValue === 1 || currentValue === true)
+        const currentValue = currentControl.state.Value
+        setState(currentValue === 1)
       }
     }, 100)
 
@@ -31,11 +31,11 @@ export const useToggle = ({ componentName, controlName }: UseToggleProps) => {
   }, [components, componentName, controlName])
 
   const toggle = () => {
-    const control = components?.[componentName]?.Controls?.[controlName]
+    const control = components?.[componentName]?.controls?.[controlName]
     if (!control || state === null) return
 
     const newState = !state
-    control.String = newState ? '1' : '0'
+    control.update(newState ? '1' : '0')
     setState(newState)
   }
 

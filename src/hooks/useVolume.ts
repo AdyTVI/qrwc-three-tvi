@@ -24,14 +24,14 @@ export const useVolume = ({
   useEffect(() => {
     if (!components?.[componentName]) return
 
-    const val = components[componentName]?.Controls?.[controlName]?.Value
+    const val = components[componentName]?.controls?.[controlName]?.state.Value
     if (typeof val === 'number') {
       setVolume(val)
       setIsLoading(false)
     }
 
     const interval = setInterval(() => {
-      const newVal = components[componentName]?.Controls?.[controlName]?.Value
+      const newVal = components[componentName]?.controls?.[controlName]?.state.Value
       if (typeof newVal === 'number') {
         setVolume(newVal)
         setIsLoading(false)
@@ -52,8 +52,8 @@ export const useVolume = ({
     if (volume === null) return
     const newVolume = Math.max(min, Math.min(max, volume + delta))
     setVolume(newVolume)
-    if (components?.[componentName]?.Controls?.[controlName]) {
-      components[componentName].Controls[controlName].Value = newVolume
+    if (components?.[componentName]?.controls?.[controlName]) {
+      components[componentName].controls[controlName].update(newVolume)
     }
   }
 
