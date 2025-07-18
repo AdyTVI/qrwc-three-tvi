@@ -2,9 +2,13 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  devIndicators: {
+/*   devIndicators: {
     appIsrStatus: false,
-  },
-};
+  }, */
+
+    reactStrictMode: true,
+    // any other config here
+  };
+  
 
 export default nextConfig;

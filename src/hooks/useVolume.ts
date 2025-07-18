@@ -1,69 +1,68 @@
-"use client"
-
-import { useState, useEffect } from 'react'
+// useVolume.ts
+import { useEffect, useState } from 'react'
 import { useQsys } from '@/context/QsysProvider'
 
-// Create interface for the props of the useVolume hook
 interface UseVolumeProps {
-    componentName: string // The name of the Q-Sys component to control
-    controlName?: string // The name of the Q-SYS control to adjust volume
-    max?: number // Manually define the maximum volume level
-    min?: number // Manually define the minimum volume level
-    step?: number // Manually define the step size for volume adjustment
+  componentName: string
+  controlName: string
+  min?: number // optional
+  max?: number // optional
+  step?: number // ✅ Add this line
 }
 
-export const useVolume = ({ 
-    componentName, 
-    controlName = 'gain', // Default control name is 'gain'
-    min = -100, // Default minimum volume level
-    max = 20, // Default maximum volume level
-    step = 1  // Default step size for volume adjustment
+export const useVolume = ({
+  componentName,
+  controlName,
+  min = -60,
+  max = 0,
+  //step = 1, // ✅ Add default value
 }: UseVolumeProps) => {
-    const { components } = useQsys()
-    const [volume, setVolume] = useState<number | null>(null)
+  const { components } = useQsys()
+  const [volume, setVolume] = useState<number | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-    useEffect(() => {
-        // Check if the component and control exist in the components object
-        if (!components?.[componentName]) return
+  useEffect(() => {
+    if (!components?.[componentName]) return
 
-        setVolume(components[componentName].Controls[controlName].Value) // Set the initial volume to the value of the control
-
-        // Set up an interval to update the volume every 100ms
-        const interval = setInterval(() => {
-            setVolume(components[componentName].Controls[controlName].Value)
-        }, 100)
-
-        return () => clearInterval(interval)
-    }, [components, componentName, controlName])
-
-    // Function to adjust the volume
-    // It checks if the control exists and if the volume is not null before adjusting
-    const adjustVolume = (amount: number) => {
-        if (!components?.[componentName]?.Controls[controlName] || volume === null) return
-
-        const newVolume = Math.min(Math.max(volume + amount, min), max) // Ensure the new volume is within the defined range
-        components[componentName].Controls[controlName].String = newVolume.toString() // Convert the volume to a string before sending it to Q-SYS 
-        setVolume(newVolume) // Update the local volume state
+    const val = components[componentName]?.Controls?.[controlName]?.Value
+    if (typeof val === 'number') {
+      setVolume(val)
+      setIsLoading(false)
     }
 
-    // Function to convert dB to percentage
-    // This function takes a dB value and returns a percentage based on the min and max values
-    const dbToPercent = (db: number) => {
-        return Math.round(((db - min) / (max - min)) * 100)
-    }
-    
-    // Function to format the volume value for display
-    // This function takes a volume value and returns a formatted string
-    const formatVolume = (value: number | null): string => {
-        if (value === null) return '-- dB'
-        return `${value  > 0 ? '+' : ''}${value} dB`
-    }
+    const interval = setInterval(() => {
+      const newVal = components[componentName]?.Controls?.[controlName]?.Value
+      if (typeof newVal === 'number') {
+        setVolume(newVal)
+        setIsLoading(false)
+      }
+    }, 100)
 
-    return { 
-        volume, 
-        adjustVolume, 
-        dbToPercent,
-        isLoading: volume === null,
-        formattedVolume: formatVolume(volume)
+    return () => clearInterval(interval)
+  }, [components, componentName, controlName])
+
+  const dbToPercent = (db: number | null): number => {
+    if (typeof db !== 'number') return 0
+    return ((db - min) / (max - min)) * 100
+  }
+
+  const formattedVolume = volume !== null ? `${volume.toFixed(1)} dB` : '--'
+
+  const adjustVolume = (delta: number) => {
+    if (volume === null) return
+    const newVolume = Math.max(min, Math.min(max, volume + delta))
+    setVolume(newVolume)
+    if (components?.[componentName]?.Controls?.[controlName]) {
+      components[componentName].Controls[controlName].Value = newVolume
     }
+  }
+
+  return {
+    volume,
+    setVolume,
+    adjustVolume,
+    dbToPercent,
+    formattedVolume,
+    isLoading,
+  }
 }

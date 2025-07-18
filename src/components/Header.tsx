@@ -1,8 +1,7 @@
 "use client"
 
-import { useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { LuMic, LuMicOff, LuVideo, LuVideoOff, LuLightbulb, LuLightbulbOff, LuPower   } from 'react-icons/lu'
+import { LuMic, LuMicOff, LuLightbulb, LuLightbulbOff, LuPower   } from 'react-icons/lu'
 import Image from 'next/image'
 import { useToggle } from '@/hooks/useToggle'
 
@@ -10,7 +9,6 @@ const pageNames: { [key: string]: string } = {
   '/': 'Home',
   '/audio': 'Audio',
   '/cameras': 'Cameras',
-  '/meetings': 'Meetings'
 }
 
 const Header = () => {
@@ -20,10 +18,7 @@ const Header = () => {
     componentName: 'MicVolume',
     controlName: 'mute'
   })
-  const {state: isCameraPrivate, toggle: togglePrivacy} = useToggle({
-    componentName: 'Camera-Bridge',
-    controlName: 'toggle.privacy'
-  })
+
   const { state: isLightOn, toggle: toggleLight } = useToggle({
     componentName: 'Light Control',
     controlName: 'toggle.1'
@@ -46,12 +41,6 @@ const Header = () => {
             {isMicMuted ? <LuMicOff size={20} /> : <LuMic size={20} />}
           </button>
 
-{/*           <button 
-            onClick={togglePrivacy}
-            className={`p-2 rounded-full ${isCameraPrivate ? 'bg-blue-500' : 'bg-gray-700'}`}
-          >
-            {isCameraPrivate ? <LuVideoOff size={20} /> : <LuVideo size={20} />}
-          </button> */}
 
           <button 
             onClick={toggleLight}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+//import { useState, useEffect } from 'react'
 import { LuVolumeX, LuVolume2, LuPlus, LuMinus} from "react-icons/lu"
 import { useToggle } from '@/hooks/useToggle'
 import { useVolume } from '@/hooks/useVolume'

@@ -3,39 +3,40 @@
 import { useState, useEffect } from 'react'
 import { useQsys } from '@/context/QsysProvider'
 
-// Create the interface for the props of the useToggle hook
 interface UseToggleProps {
-  componentName: string //The name of the Q-Sys component to toggle
-  controlName: string //The name of the Q-SYS control to toggle
+  componentName: string
+  controlName: string
 }
 
 export const useToggle = ({ componentName, controlName }: UseToggleProps) => {
-  const { components } = useQsys() // Get the components from the Qsys context
-  const [state, setState] = useState<boolean | null>(null) // State to hold the toggle state
+  const { components } = useQsys()
+  const [state, setState] = useState<boolean | null>(null)
 
   useEffect(() => {
-    // Check if the component and control exist in the components object
-    if (!components?.[componentName]) return
-    setState(components[componentName].Controls[controlName].Value) // Set the initial state to the value of the control
+    const control = components?.[componentName]?.Controls?.[controlName]
+    if (!control) return
 
-    // Set up an interval to update the state every 100ms
+    const initialValue = control.Value
+    setState(initialValue === '1' || initialValue === 1 || initialValue === true)
+
     const interval = setInterval(() => {
-      setState(components[componentName].Controls[controlName].Value)
+      const currentControl = components?.[componentName]?.Controls?.[controlName]
+      if (currentControl) {
+        const currentValue = currentControl.Value
+        setState(currentValue === '1' || currentValue === 1 || currentValue === true)
+      }
     }, 100)
 
     return () => clearInterval(interval)
   }, [components, componentName, controlName])
 
-  // Function to toggle the state of the control
-  // It checks if the control exists and if the state is not null before toggling
   const toggle = () => {
-    // Check if the component and control exist in the components object
-    if (!components?.[componentName]?.Controls[controlName] || state === null) return
-    
-    // Toggle the state and update the control value in the components object
+    const control = components?.[componentName]?.Controls?.[controlName]
+    if (!control || state === null) return
+
     const newState = !state
-    components[componentName].Controls[controlName].String = newState.toString() //Use toString() to convert boolean to string. This prevents errors when sending the command to the Q-SYS Core.
-    setState(newState) // Update the local state
+    control.String = newState ? '1' : '0'
+    setState(newState)
   }
 
   return { state, toggle }

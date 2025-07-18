@@ -64,7 +64,8 @@ export const setupQrwc = (onControlsUpdated: (qrwc: Qrwc, updatedComponent: ICom
 
     // Listen for errors
     socket.onerror = (error) => {
-      setTimeout(connectQrwc, 1000) // Retry connection after 1 second
+      console.error("WebSocket error:", error);
+      setTimeout(connectQrwc, 1000);
     }
   }
 

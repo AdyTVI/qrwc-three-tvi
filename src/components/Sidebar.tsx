@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { usePathname } from "next/navigation"
-import { LuHouse, LuMusic, LuVideo, LuDoorOpen, LuMenu  } from "react-icons/lu"
+import { LuHouse, LuMusic, LuVideo, LuMenu  } from "react-icons/lu"
 import Link from "next/link"
 
 const Sidebar = () => {

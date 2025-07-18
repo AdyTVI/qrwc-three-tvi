@@ -3,36 +3,40 @@
 import { useState, useEffect } from 'react'
 import { useQsys } from '@/context/QsysProvider'
 
-// create the interface for the props of the useTrigger hook
+// Interface for props
 interface useTriggerProps {
-    componentName: string // The name of the Q-Sys component to trigger
-    controlName: string // The name of the Q-SYS control to trigger
+  componentName: string
+  controlName: string
 }
 
 export const useTrigger = ({ componentName, controlName }: useTriggerProps) => {
-    const { components } = useQsys()
-    const [state, setState] = useState<boolean | null>(null)
+  const { components } = useQsys()
+  const [state, setState] = useState<boolean | null>(null)
 
-    useEffect(() => {
-        // Check if the component and control exist in the components object
-        if (!components?.[componentName]) return
+  useEffect(() => {
+    const control = components?.[componentName]?.Controls?.[controlName]
+    if (!control) return
 
-        setState(components[componentName].Controls[controlName].Value) // Set the initial state to the value of the control
+    const initialValue = control.Value
+    setState(initialValue === '1' || initialValue === 1 || initialValue === true)
 
-        // Set up an interval to update the state every 100ms
-        const interval = setInterval(() => {
-            setState(components[componentName].Controls[controlName].Value)
-        }, 100)
+    const interval = setInterval(() => {
+      const currentControl = components?.[componentName]?.Controls?.[controlName]
+      if (currentControl) {
+        const currentValue = currentControl.Value
+        setState(currentValue === '1' || currentValue === 1 || currentValue === true)
+      }
+    }, 100)
 
-        return () => clearInterval(interval)
-    }, [components, componentName, controlName])
+    return () => clearInterval(interval)
+  }, [components, componentName, controlName])
 
-    // Function to trigger the control
-    // It checks if the control exists and if the state is not null before triggering
-    const trigger = () => {
-        if (!components?.[componentName]?.Controls[controlName] || state === null) return
-        components[componentName].Controls[controlName].Value = '1' // Passing 1 to the value of the trigger control in Q-SYS will activate the trigger. This is a novel way of triggering a control in Q-SYS. This will not work on boolean controls, only on trigger controls.
-    }
+  const trigger = () => {
+    const control = components?.[componentName]?.Controls?.[controlName]
+    if (!control || state === null) return
 
-    return { state, trigger }
+    control.Value = '1' // Trigger pulse
+  }
+
+  return { state, trigger }
 }
