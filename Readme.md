@@ -51,13 +51,12 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Screenshots
 
-![Homepage!](public/assets/Home.png "Homepage")
+![Homepage!](public/assets/Home.png "Homepage Environment")
 
-![Audio!](public/assets/Audio.png "Audio Page")
+![Audio!](public/assets/Audio.png "Audio Page Control")
 
-![Camera Preview!](public/assets/Camera%20Preview.png "Camera Preview")
+![Camera!](public/assets/Camera.png "Camera Page Control")
 
-![Meetings!](public/assets/Meetings.png "Meetings")
 
 ## MIT License
 
