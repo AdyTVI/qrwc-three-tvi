@@ -15,23 +15,122 @@ import {
 } from "react-icons/lu"
 import { useVolume } from "@/hooks/useVolume"
 import { useToggle } from "@/hooks/useToggle"
+import { useNumber } from "@/hooks/useNumber"
+import { useString } from "@/hooks/useString"
 import { useMomentary } from "@/hooks/useMomentary"
-
 
 export default function AudioPage() {
   const volumes = [
-    { name: "Bluetooth", component: "ProgramVolume" },
     { name: "Microphone", component: "MicVolume" },
     { name: "USB", component: "USBVolume" },
-    { name: "Media Player", component: "MediaVolume" },
+    { name: "Audio Player", component: "MediaVolume" },
+    { name: "Bluetooth", component: "ProgramVolume" },
   ]
 
-  // Media Player Control Triggers
-  const { trigger: PushRewind } = useMomentary({ componentName: "MediaPlayerControl", controlName: "momentary.4" })
-  const { trigger: PushPlay } = useMomentary({ componentName: "MediaPlayerControl", controlName: "momentary.3" })
-  const { trigger: PushPause } = useMomentary({ componentName: "MediaPlayerControl", controlName: "momentary.2" })
-  const { trigger: PushStop } = useMomentary({ componentName: "MediaPlayerControl", controlName: "momentary.5" })
-  const { trigger: PushFastForward } = useMomentary({ componentName: "MediaPlayerControl", controlName: "momentary.1" })
+  // Media Player Control Toggle
+  const { trigger: PushRewind } = useMomentary({
+    componentName: "AudioPlayer",
+    controlName: "rewind",
+  })
+
+  const { trigger: PushFastForward } = useMomentary({
+    componentName: "AudioPlayer",
+    controlName: "fast.forward",
+  })
+
+  const { toggle: PushPlay } = useToggle({
+    componentName: "AudioPlayer",
+    controlName: "play",
+  })
+
+  const { toggle: PushPause } = useToggle({
+    componentName: "AudioPlayer",
+    controlName: "pause",
+  })
+
+  const { toggle: PushStop } = useToggle({
+    componentName: "AudioPlayer",
+    controlName: "stop",
+  })
+
+  const { toggle: PushPrev } = useToggle({
+    componentName: "AudioPlayer",
+    controlName: "playlist.prev",
+  })
+
+  const { toggle: PushNext } = useToggle({
+    componentName: "AudioPlayer",
+    controlName: "playlist.next",
+  })
+
+  // Player state from Q-SYS
+  const { state: isPlaying } = useToggle({
+    componentName: "AudioPlayer",
+    controlName: "playing",
+  })
+
+  const { state: isPaused } = useToggle({
+    componentName: "AudioPlayer",
+    controlName: "paused",
+  })
+
+/*   const { state: isStopped } = useToggle({
+    componentName: "AudioPlayer",
+    controlName: "stopped",
+  }) */
+
+
+  const { state: progressSeconds } = useNumber({
+    componentName: "AudioPlayer",
+    controlName: "progress",
+  })
+
+  const { state: progressMax } = useNumber({
+    componentName: "AudioPlayer",
+    controlName: "progress",
+    field: "ValueMax"
+  })
+
+  const { state: progressString } = useString({
+    componentName: "AudioPlayer",
+    controlName: "progress",
+    field: "String"
+  })
+
+  const playerState: "playing" | "paused" | "stopped" = isPlaying
+    ? "playing"
+    : isPaused
+      ? "paused"
+      : "stopped"
+
+  const handleSmartToggle = () => {
+    if (playerState === "playing") {
+      PushPause()
+    } else {
+      PushPlay()
+    }
+  }
+
+  const handleStop = () => {
+    PushStop()
+  }
+
+  const formatTime = (seconds: number | null): string => {
+    if (seconds === null || isNaN(seconds)) return "00:00"
+    const mins = Math.floor(seconds / 60)
+    const secs = Math.floor(seconds % 60)
+    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`
+  }
+
+  const progressPercent = progressMax
+    ? Math.min(100, Math.max(0, ((progressSeconds ?? 0) / progressMax) * 100))
+    : 0
+
+  const { state: currentFilename } = useString({
+    componentName: "AudioPlayer",
+    controlName: "filename.ui",
+    field: "String"
+  })
 
   return (
     <div className="p-8">
@@ -50,10 +149,29 @@ export default function AudioPage() {
       <div className="flex items-center justify-center my-12">
         <div className="flex items-center w-full max-w-xl">
           <div className="flex-grow border-t border-gray-300" />
-          <span className="mx-4 text-gray-500 font-semibold">Media Player</span>
+          <span className="mx-4 text-gray-500 font-semibold">Audio Player</span>
           <div className="flex-grow border-t border-gray-300" />
         </div>
       </div>
+
+      {/* Current Track Info */}
+      <div className="text-center mb-6 text-white">
+        <div className="flex justify-center mt-4">
+          <div className="bg-blue-900 text-blue-200 px-4 py-2 rounded shadow-md text-sm">
+            🎵 Now Playing: {currentFilename || "No track selected"}
+          </div>
+        </div>
+        {<div className="text-sm text-gray-400">
+          Elapsed: {progressString || formatTime(progressSeconds)}
+        </div>}
+        <div className="w-full max-w-xl mx-auto bg-gray-700 rounded-full h-2 mt-2">
+          {<div
+            className="bg-blue-500 h-full rounded-full transition-all duration-300"
+            style={{ width: `${progressPercent}%` }}
+          />}
+        </div>
+      </div>
+
 
       {/* Media Player Buttons */}
       <div className="flex justify-center gap-4 flex-wrap">
@@ -65,35 +183,31 @@ export default function AudioPage() {
           <LuRewind size={20} />
         </button>
         <button
-          onClick={() => console.log("Skip Back clicked")}
+          onClick={PushPrev}
           className="p-4 bg-gray-200 rounded-full hover:bg-gray-300 transition"
           title="Previous"
         >
           <LuSkipBack size={20} />
         </button>
         <button
-          onClick={PushPlay}
-          className="p-4 bg-green-500 text-white rounded-full hover:bg-green-600 transition"
-          title="Play"
+          onClick={handleSmartToggle}
+          className={`p-4 ${playerState === "playing"
+              ? "bg-red-500 hover:bg-red-600"
+              : "bg-green-500 hover:bg-green-600"
+            } text-white rounded-full transition`}
+          title={playerState === "playing" ? "Pause" : "Play"}
         >
-          <LuPlay size={20} />
+          {playerState === "playing" ? <LuPause size={20} /> : <LuPlay size={20} />}
         </button>
         <button
-          onClick={PushPause}
-          className="p-4 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
-          title="Pause"
-        >
-          <LuPause size={20} />
-        </button>
-        <button
-          onClick={PushStop}
+          onClick={handleStop}
           className="p-4 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition"
           title="Stop"
         >
           <LuCircleStop size={20} />
         </button>
         <button
-          onClick={() => console.log("Skip Forward clicked")}
+          onClick={PushNext}
           className="p-4 bg-gray-200 rounded-full hover:bg-gray-300 transition"
           title="Next"
         >

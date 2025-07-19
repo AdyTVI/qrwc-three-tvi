@@ -28,7 +28,7 @@ export const setupQrwc = (onControlsUpdated: (qrwc: Qrwc, updatedComponent: Comp
         //componentFilter, //comment out if you want to receive all components
         //pollingInterval // comment out if you want to use the default polling interval of 350
       //})
-      const qrwc = await Qrwc.createQrwc({ socket, pollingInterval: 100 })
+      const qrwc = await Qrwc.createQrwc({ socket, pollingInterval: 50 })
 
       // Listen for new control updates
       qrwc.on('update', (updatedComponent) => {
