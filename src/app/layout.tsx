@@ -14,8 +14,15 @@ const geologica = Geologica({
 })
 
 export const metadata: Metadata = {
-  title: "QRWC Zero TVI",
+  title: "QRWC One TVI",
   description: "Base file created using Next.js. This is a QRWC Zero App. For more info please contact ady.putra@technetvision.com.",
+  icons: {
+    icon: [
+      { url: "/favicon-32x32.ico", sizes: "any", type: "image/x-icon" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      //{ url: "/favicon.svg", type: "image/svg+xml" }
+    ]
+  }
 };
 
 export default function RootLayout({
