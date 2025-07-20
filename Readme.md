@@ -24,7 +24,7 @@ To Deploy this app:
 npm i
 
 # Install Q-SYS qrwc module
-npm i @q-sys/qrwc
+npm i @q-sys/qrwc latest
 
 # Start development server
 npm run dev
@@ -51,6 +51,10 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 ![Audio!](public/assets/Audio.png "Audio Page Control")
 
 ![Camera!](public/assets/Camera.png "Camera Page Control")
+
+![Security Camera!](public/assets/Security_Camera.png "Live View Monitoring")
+
+![Loading Progress!](public/assets/Processing_Power_Control.png "Camera Page Control")
 
 
 ## MIT License
