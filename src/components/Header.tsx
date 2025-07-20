@@ -44,7 +44,7 @@ const Header = () => {
   return (
     <header className="w-full bg-gray-900 text-white p-4 relative z-10">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">{pageNames[pathname] || 'Home'}</h1>
+      <h1 className="text-2xl font-bold">{pageNames[pathname ?? '/'] ?? 'Home'}</h1>
 
         <div className="flex items-center gap-6">
           <button
