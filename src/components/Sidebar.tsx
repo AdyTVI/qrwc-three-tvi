@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { usePathname } from "next/navigation"
-import { LuHouse, LuMusic, LuVideo, LuMenu  } from "react-icons/lu"
+import { LuHouse, LuMusic, LuVideo, LuMenu, LuCamera } from "react-icons/lu" // ✅ Added LuCamera
 import Link from "next/link"
 
 const Sidebar = () => {
@@ -14,7 +14,7 @@ const Sidebar = () => {
     { id: 1, title: "Home", icon: <LuHouse size={30} />, path: "/" },
     { id: 2, title: "Audio", icon: <LuMusic size={30} />, path: "/audio" },
     { id: 3, title: "Cameras", icon: <LuVideo size={30} />, path: "/cameras" },
-    //{ id: 4, title: "Meetings", icon: <LuDoorOpen size={30} />, path: "/meetings" },
+    { id: 4, title: "Security Camera", icon: <LuCamera size={30} />, path: "/security-camera" }, // ✅ New menu item
   ]
 
   return (
