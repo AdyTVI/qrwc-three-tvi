@@ -17,7 +17,7 @@
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
     "react-player": "^2.16.0",
-    "whep-client": "^1.0.4"
+    "simple-peer": "^9.11.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

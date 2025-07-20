@@ -9,18 +9,18 @@ import {
   LuZoomOut,
   LuHouse
 } from "react-icons/lu";
-import { useState, useRef } from "react";
-import { useToggle } from "@/hooks/useToggle";
-import { useHLSPlayer } from "@/hooks/useHLSPlayer";
+import { useState, useRef, useEffect } from "react";
+import { useMomentary } from "@/hooks/useMomentary";
+import { useWebRTC } from "@/hooks/useWebRTC";
 
 export default function CamerasPage() {
-  const { toggle: moveHome } = useToggle({ componentName: "AverCamera", controlName: "btnHome" });
-  const { toggle: moveUp } = useToggle({ componentName: "AverCamera", controlName: "btnUp" });
-  const { toggle: moveDown } = useToggle({ componentName: "AverCamera", controlName: "btnDown" });
-  const { toggle: moveLeft } = useToggle({ componentName: "AverCamera", controlName: "btnLeft" });
-  const { toggle: moveRight } = useToggle({ componentName: "AverCamera", controlName: "btnRight" });
-  const { toggle: zoomIn } = useToggle({ componentName: "AverCamera", controlName: "btnZoomIn" });
-  const { toggle: zoomOut } = useToggle({ componentName: "AverCamera", controlName: "btnZoomOut" });
+  const { trigger: moveHome } = useMomentary({ componentName: "AverCamera", controlName: "btnHome" });
+  const { trigger: moveUp } = useMomentary({ componentName: "AverCamera", controlName: "btnUp" });
+  const { trigger: moveDown } = useMomentary({ componentName: "AverCamera", controlName: "btnDown" });
+  const { trigger: moveLeft } = useMomentary({ componentName: "AverCamera", controlName: "btnLeft" });
+  const { trigger: moveRight } = useMomentary({ componentName: "AverCamera", controlName: "btnRight" });
+  const { trigger: zoomIn } = useMomentary({ componentName: "AverCamera", controlName: "btnZoomIn" });
+  const { trigger: zoomOut } = useMomentary({ componentName: "AverCamera", controlName: "btnZoomOut" });
 
   const [isPressed, setIsPressed] = useState({
     cameraHome: false,
@@ -58,21 +58,28 @@ export default function CamerasPage() {
     }
   };
 
-  const videoRef = useRef<HTMLVideoElement>(null);
-  useHLSPlayer(videoRef, "http://192.168.1.250:3000/stream/cam.m3u8");
+  const webrtcVideoRef = useRef<HTMLVideoElement>(null);
+
+  const { stream: webRTCStream } = useWebRTC("http://192.168.1.250:8889/cam1_compressed/whep");
+
+  useEffect(() => {
+    if (webrtcVideoRef.current && webRTCStream) {
+      webrtcVideoRef.current.srcObject = webRTCStream;
+    }
+  }, [webRTCStream]);
 
   return (
     <div className="flex justify-center px-4 py-8">
       <div className="flex gap-6 w-full max-w-6xl">
-
         {/* 📺 Camera Stream Box */}
         <div className="flex-1 bg-white rounded-2xl shadow-xl p-4 flex flex-col">
           <h2 className="text-xl font-bold mb-4 text-center">Camera Stream</h2>
           <div className="flex-1 bg-black rounded-xl overflow-hidden">
             <video
-              ref={videoRef}
+              ref={webrtcVideoRef}
               autoPlay
               muted
+              playsInline
               controls
               className="w-full h-full object-contain"
             />
