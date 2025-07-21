@@ -14,7 +14,7 @@ const geologica = Geologica({
 })
 
 export const metadata: Metadata = {
-  title: "QRWC One TVI",
+  title: "QRWC Two TVI",
   description: "Base file created using Next.js. This is a QRWC Zero App. For more info please contact ady.putra@technetvision.com.",
   icons: {
     icon: [

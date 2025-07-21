@@ -1,57 +1,71 @@
-"use client"; // This file is a client component, so it can use the WebSocket API directly
+"use client";
 
-// This file is responsible for connecting to the Q-SYS Core and setting up the Qrwc instance
-// It uses the Qrwc library to handle the WebSocket connection and the Q-SYS API
-import { Qrwc, Component } from "@q-sys/qrwc"; 
+import { Qrwc, Component } from "@q-sys/qrwc";
 
-// This function sets up the Qrwc instance and connects to the Q-SYS Core
-// It takes three parameters: onControlsUpdated, startComplete, and disconnect
-// onControlsUpdated is a callback function that is called when the controls are updated
-// startComplete is a callback function that is called when the Qrwc instance has finished starting
-// disconnect is a callback function that is called when the Qrwc instance is disconnected
-// It returns a WebSocket instance that is used to connect to the Q-SYS Core
-export const setupQrwc = (onControlsUpdated: (qrwc: Qrwc, updatedComponent: Component<string>) => void, startComplete: (qrwc: Qrwc) => void, disconnect: (qrwc: Qrwc) => void) => {
-  let socket: WebSocket | null = null
-  
+export const setupQrwc = (
+  onControlsUpdated: (qrwc: Qrwc, updatedComponent: Component<string>) => void,
+  startComplete: (qrwc: Qrwc) => void,
+  disconnect: (qrwc: Qrwc) => void
+) => {
+  let socket: WebSocket | null = null;
+  let reconnectAttempts = 0;
+  let shouldReconnect = true;
+  let currentQrwc: Qrwc | null = null;
+
   const connectQrwc = async () => {
-    // Create a new WebSocket instance  
-    socket = new WebSocket(`ws://${process.env.NEXT_PUBLIC_QSYS_IP}/qrc-public-api/v0`)
-    // Create a new Qrwc instance
-    //const qrwc = new Qrwc() 
+    const wsUrl = `ws://${process.env.NEXT_PUBLIC_QSYS_IP}/qrc-public-api/v0`;
+    socket = new WebSocket(wsUrl);
 
-    // New async method for version 0.3.0 and above
-    socket.onopen = async () => { 
-      // Attach the WebSocket to the Qrwc instance
-      //await qrwc.attachWebSocket(socket!)
-      // start the Qrwc instance, passing in the optional componentFilter and pollingInterval
-      //await qrwc.start({
-        //componentFilter, //comment out if you want to receive all components
-        //pollingInterval // comment out if you want to use the default polling interval of 350
-      //})
-      const qrwc = await Qrwc.createQrwc({ socket, pollingInterval: 50 })
+    socket.onopen = async () => {
+      console.log("[WebSocket] Connected to Q-SYS Core");
 
-      // Listen for new control updates
-      qrwc.on('update', (updatedComponent) => {
-        console.log(updatedComponent)
-        onControlsUpdated(qrwc, updatedComponent)
-      })
+      reconnectAttempts = 0; // reset retry count
 
-      // Listen for disconnect events
-      qrwc.on('disconnected', () => disconnect(qrwc))
-      
-      // listen for startComplete event, and call the startComplete function
-      // This event is fired when the Qrwc instance has finished starting and is ready to receive commands  
-      //qrwc.on('startComplete', () => startComplete(qrwc))
-    }
+      try {
+        currentQrwc = await Qrwc.createQrwc({ socket, pollingInterval: 350 });
 
-    // Listen for errors
+        currentQrwc.on("update", (updatedComponent) => {
+          onControlsUpdated(currentQrwc!, updatedComponent);
+        });
+
+        currentQrwc.on("disconnected", () => {
+          console.warn("[Qrwc] Disconnected from core.");
+          disconnect(currentQrwc!);
+        });
+
+        startComplete(currentQrwc);
+      } catch (err) {
+        console.error("[Qrwc] Failed to initialize:", err);
+        reconnectWithDelay();
+      }
+    };
+
     socket.onerror = (error) => {
-      console.error("WebSocket error:", error);
-      setTimeout(connectQrwc, 1000);
-    }
-  }
+      console.error("[WebSocket] Error:", error);
+    };
 
-  // Connect to the Q-SYS Core
-  connectQrwc()
-  
-}
+    socket.onclose = () => {
+      console.warn("[WebSocket] Connection closed.");
+      reconnectWithDelay();
+    };
+  };
+
+  const reconnectWithDelay = () => {
+    if (!shouldReconnect) return;
+
+    const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 15000); // exponential backoff max 15s
+    console.log(`[WebSocket] Reconnecting in ${delay / 1000}s...`);
+    reconnectAttempts++;
+
+    setTimeout(connectQrwc, delay);
+  };
+
+  connectQrwc();
+
+  // Optional cleanup method
+  return () => {
+    shouldReconnect = false;
+    socket?.close();
+    //currentQrwc?.destroy?.(); // in case Qrwc supports cleanup
+  };
+};

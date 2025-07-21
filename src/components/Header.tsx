@@ -22,13 +22,13 @@ const Header = () => {
   })
 
   const { state: isLightOn, toggle: toggleLight } = useToggle({
-    componentName: 'Light Control',
-    controlName: 'toggle.1'
+    componentName: 'FF_Light',
+    controlName: 'state'
   })
 
   const { state: isPowerOn, toggle: setIsPowerOn } = useToggle({
-    componentName: 'SystemPower',
-    controlName: 'toggle.1'
+    componentName: 'FF_Power',
+    controlName: 'state'
   })
 
   const [isLoading, setIsLoading] = useState(false)

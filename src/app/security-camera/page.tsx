@@ -3,7 +3,8 @@
 import { useRef, useEffect } from "react"
 import { useWebRTC } from "@/hooks/useWebRTC"
 
-const cameraUrls = [
+// Private
+/* const cameraUrls = [
   "http://192.168.1.250:8889/cctv1_compressed/whep",
   "http://192.168.1.250:8889/cctv2_compressed/whep",
   "http://192.168.1.250:8889/cctv3_compressed/whep",
@@ -12,7 +13,19 @@ const cameraUrls = [
   "http://192.168.1.250:8889/cctv6_compressed/whep",
   "http://192.168.1.250:8889/cctv7_compressed/whep",
   "http://192.168.1.250:8889/cctv8_compressed/whep",
-]
+] */
+
+  //Public
+  const cameraUrls = [
+    "http://139.255.254.202:8889/cctv1_compressed/whep",
+    "http://139.255.254.202:8889/cctv2_compressed/whep",
+    "http://139.255.254.202:8889/cctv3_compressed/whep",
+    "http://139.255.254.202:8889/cctv4_compressed/whep",
+    "http://139.255.254.202:8889/cctv5_compressed/whep",
+    "http://139.255.254.202:8889/cctv6_compressed/whep",
+    "http://139.255.254.202:8889/cctv7_compressed/whep",
+    "http://139.255.254.202:8889/cctv8_compressed/whep",
+  ]
 
 export default function SecurityCameraPage() {
   return (

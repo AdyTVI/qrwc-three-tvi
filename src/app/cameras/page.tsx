@@ -59,9 +59,13 @@ export default function CamerasPage() {
   };
 
   const webrtcVideoRef = useRef<HTMLVideoElement>(null);
-
-  const { stream: webRTCStream } = useWebRTC("http://192.168.1.250:8889/cam1_compressed/whep");
-
+  
+  //Private
+  //const { stream: webRTCStream } = useWebRTC("http://192.168.1.250:8889/cam1_compressed/whep");
+  
+  //Public
+  const { stream: webRTCStream } = useWebRTC("http://139.255.254.202:8889/cam1_compressed/whep");
+  
   useEffect(() => {
     if (webrtcVideoRef.current && webRTCStream) {
       webrtcVideoRef.current.srcObject = webRTCStream;

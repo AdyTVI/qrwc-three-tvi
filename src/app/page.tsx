@@ -4,23 +4,23 @@ import { useToggle } from '@/hooks/useToggle';
 
 export default function Home() {
   const { state: workSelected, toggle: toggleWork } = useToggle({
-    componentName: 'SourceControl',
-    controlName: 'selector.0'
+    componentName: 'FF_Wireless',
+    controlName: 'state'
   });
 
   const { state: personalSelected, toggle: togglePersonal } = useToggle({
-    componentName: 'SourceControl',
-    controlName: 'selector.1'
+    componentName: 'FF_Laptop',
+    controlName: 'state'
   });
 
   const { state: isLightOn, toggle: toggleLight } = useToggle({
-    componentName: 'Light Control',
-    controlName: 'toggle.1'
+    componentName: 'FF_Light',
+    controlName: 'state'
   });
 
   const { state: pixelPower, toggle: togglePixelPower } = useToggle({
-    componentName: 'LED',
-    controlName: 'toggle.1'
+    componentName: 'FF_LED',
+    controlName: 'state'
   });
 
   return (
