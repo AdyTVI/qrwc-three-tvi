@@ -25,6 +25,7 @@ export const setupQrwc = (
         currentQrwc = await Qrwc.createQrwc({ socket, pollingInterval: 350 });
 
         currentQrwc.on("update", (updatedComponent) => {
+          console.log(updatedComponent)
           onControlsUpdated(currentQrwc!, updatedComponent);
         });
 
