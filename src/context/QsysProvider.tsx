@@ -19,7 +19,7 @@ function QsysProvider({ children }: { children: React.ReactNode }) {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    setupQrwc(
+    const cleanup = setupQrwc(
       (qrwc: Qrwc, updatedComponent: QsysComponentMap[keyof QsysComponentMap]) => {
         setComponents(prev => ({
           ...prev,
@@ -34,6 +34,10 @@ function QsysProvider({ children }: { children: React.ReactNode }) {
         setIsConnected(false);
       }
     );
+
+    return () => {
+      cleanup?.(); // ✅ Properly close the WebSocket connection and prevent duplicate listeners
+    };
   }, []);
 
   return (

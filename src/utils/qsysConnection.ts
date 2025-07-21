@@ -22,7 +22,7 @@ export const setupQrwc = (
       reconnectAttempts = 0; // reset retry count
 
       try {
-        currentQrwc = await Qrwc.createQrwc({ socket, pollingInterval: 350 });
+        currentQrwc = await Qrwc.createQrwc({ socket, pollingInterval: 100 });
 
         currentQrwc.on("update", (updatedComponent) => {
           console.log(updatedComponent)

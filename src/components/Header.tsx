@@ -10,7 +10,7 @@ const pageNames: { [key: string]: string } = {
   '/': 'Home',
   '/audio': 'Audio',
   '/cameras': 'Cameras',
-  '/security-camera': 'Security Cameras',
+  //'/security-camera': 'Security Cameras',
 }
 
 const Header = () => {
