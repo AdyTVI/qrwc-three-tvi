@@ -28,6 +28,16 @@ import { useWebRTC } from "@/hooks/useWebRTC"
   ]
 
 export default function SecurityCameraPage() {
+  useEffect(() => {
+    console.log("reload start")
+    const interval = setInterval(() => {
+      console.log("reload")
+      window.location.reload();
+    }, 1000 * 60); // setiap 60 detik
+
+    return () => clearInterval(interval); // bersihkan saat unmount
+  }, []);
+  
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold text-center mb-6">Live View Cameras</h1>

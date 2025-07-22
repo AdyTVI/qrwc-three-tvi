@@ -1,6 +1,7 @@
 "use client"
 import { LuLaptop, LuWifiHigh, LuLightbulb, LuGrid3X3 } from "react-icons/lu";
 import { useToggle } from '@/hooks/useToggle';
+import { useEffect } from "react";
 
 export default function Home() {
   const { state: workSelected, toggle: toggleWork } = useToggle({
@@ -22,6 +23,16 @@ export default function Home() {
     componentName: 'FF_LED',
     controlName: 'state'
   });
+
+  useEffect(() => {
+    console.log("reload start")
+    const interval = setInterval(() => {
+      console.log("reload")
+      window.location.reload();
+    }, 1000 * 60); // setiap 60 detik
+
+    return () => clearInterval(interval); // bersihkan saat unmount
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] p-8 bg-gray-50">      

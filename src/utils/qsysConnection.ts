@@ -43,6 +43,7 @@ export const setupQrwc = (
 
     socket.onerror = (error) => {
       console.error("[WebSocket] Error:", error);
+      reconnectWithDelay();
     };
 
     socket.onclose = () => {

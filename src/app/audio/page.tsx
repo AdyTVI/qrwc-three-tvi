@@ -19,7 +19,7 @@ import { useNumber } from "@/hooks/useNumber";
 import { useString } from "@/hooks/useString";
 import { useMomentary } from "@/hooks/useMomentary";
 import { useDirectoryChoices } from "@/hooks/useDirectoryChoices";
-import { JSX } from "react";
+import { JSX, useEffect } from "react";
 
 export default function AudioPage() {
   const volumes = [
@@ -66,6 +66,16 @@ export default function AudioPage() {
   const progressPercent = progressMax
     ? Math.min(100, Math.max(0, ((progressSeconds ?? 0) / progressMax) * 100))
     : 0;
+
+    useEffect(() => {
+      console.log("reload start")
+      const interval = setInterval(() => {
+        console.log("reload")
+        window.location.reload();
+      }, 1000 * 60); // setiap 60 detik
+  
+      return () => clearInterval(interval); // bersihkan saat unmount
+    }, []);
 
   return (
     <div className="p-8">

@@ -72,6 +72,16 @@ export default function CamerasPage() {
     }
   }, [webRTCStream]);
 
+  useEffect(() => {
+    console.log("reload start")
+    const interval = setInterval(() => {
+      console.log("reload")
+      window.location.reload();
+    }, 1000 * 60); // setiap 60 detik
+
+    return () => clearInterval(interval); // bersihkan saat unmount
+  }, []);
+
   return (
     <div className="flex justify-center px-4 py-8">
       <div className="flex gap-6 w-full max-w-6xl">
