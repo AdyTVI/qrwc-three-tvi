@@ -24,28 +24,28 @@ import { JSX, useEffect } from "react";
 export default function AudioPage() {
   const volumes = [
     //{ name: "Microphone", component: "MicVolume" },
-    { name: "USB", component: "USBVolume" },
-    { name: "Media Player", component: "Audio_Player", controlName: "gain" },
+    //{ name: "USB", component: "USBVolume" },
+    { name: "Media Player", component: "Medium_Player", controlName: "gain" }
     //{ name: "Bluetooth", component: "ProgramVolume" },
   ];
 
-  const { trigger: PushRewind } = useMomentary({ componentName: "Audio_Player", controlName: "rewind" });
-  const { trigger: PushFastForward } = useMomentary({ componentName: "Audio_Player", controlName: "fast.forward" });
-  const { toggle: PushPlay } = useToggle({ componentName: "Audio_Player", controlName: "play" });
-  const { toggle: PushPause } = useToggle({ componentName: "Audio_Player", controlName: "pause" });
-  const { toggle: PushStop } = useToggle({ componentName: "Audio_Player", controlName: "stop" });
-  const { toggle: PushPrev } = useToggle({ componentName: "Audio_Player", controlName: "playlist.prev" });
-  const { toggle: PushNext } = useToggle({ componentName: "Audio_Player", controlName: "playlist.next" });
+  const { trigger: PushRewind } = useMomentary({ componentName: "Medium_Player", controlName: "rewind" });
+  const { trigger: PushFastForward } = useMomentary({ componentName: "Medium_Player", controlName: "fast.forward" });
+  const { toggle: PushPlay } = useToggle({ componentName: "Medium_Player", controlName: "play" });
+  const { toggle: PushPause } = useToggle({ componentName: "Medium_Player", controlName: "pause" });
+  const { toggle: PushStop } = useToggle({ componentName: "Medium_Player", controlName: "stop" });
+  const { toggle: PushPrev } = useToggle({ componentName: "Medium_Player", controlName: "playlist.prev" });
+  const { toggle: PushNext } = useToggle({ componentName: "Medium_Player", controlName: "playlist.next" });
 
-  const { state: isPlaying } = useToggle({ componentName: "Audio_Player", controlName: "playing" });
-  const { state: isPaused } = useToggle({ componentName: "Audio_Player", controlName: "paused" });
+  const { state: isPlaying } = useToggle({ componentName: "Medium_Player", controlName: "playing" });
+  const { state: isPaused } = useToggle({ componentName: "Medium_Player", controlName: "paused" });
 
-  const { state: progressSeconds } = useNumber({ componentName: "Audio_Player", controlName: "progress" });
-  const { state: progressMax } = useNumber({ componentName: "Audio_Player", controlName: "progress", field: "ValueMax" });
-  const { state: progressString } = useString({ componentName: "Audio_Player", controlName: "progress", field: "String" });
-  const { state: currentFilename } = useString({ componentName: "Audio_Player", controlName: "filename.ui", field: "String" });
+  const { state: progressSeconds } = useNumber({ componentName: "Medium_Player", controlName: "progress" });
+  const { state: progressMax } = useNumber({ componentName: "Medium_Player", controlName: "progress", field: "ValueMax" });
+  const { state: progressString } = useString({ componentName: "Medium_Player", controlName: "progress", field: "String" });
+  const { state: currentFilename } = useString({ componentName: "Medium_Player", controlName: "filename.ui", field: "String" });
 
-  const { value: selectedDir, choices: directories, select } = useDirectoryChoices("Audio_Player", "playlist.file");
+  const { value: selectedDir, choices: directories, select } = useDirectoryChoices("Medium_Player", "playlist.file");
 
   const playerState: "playing" | "paused" | "stopped" = isPlaying ? "playing" : isPaused ? "paused" : "stopped";
 

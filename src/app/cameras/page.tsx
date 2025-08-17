@@ -77,7 +77,7 @@ export default function CamerasPage() {
     const interval = setInterval(() => {
       console.log("reload")
       window.location.reload();
-    }, 1000 * 60); // setiap 60 detik
+    }, 1000 * 300); // setiap 60 detik
 
     return () => clearInterval(interval); // bersihkan saat unmount
   }, []);

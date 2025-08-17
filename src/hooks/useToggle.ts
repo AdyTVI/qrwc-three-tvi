@@ -31,7 +31,10 @@ export const useToggle = ({ componentName, controlName }: UseToggleProps) => {
   }, [components, componentName, controlName])
 
   const toggle = () => {
+    console.log(`USE TOGGLE | ${componentName} - ${controlName}`)
+    console.log(components);
     const control = components?.[componentName]?.controls?.[controlName]
+    console.log(`USE TOGGLE | ${control}`)
     if (!control || state === null) return
 
     const newState = !state

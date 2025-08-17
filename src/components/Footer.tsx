@@ -8,14 +8,14 @@ import { useVolume } from '@/hooks/useVolume'
 
 const Footer = () => {
   const { volume, adjustVolume, dbToPercent, isLoading, formattedVolume } = useVolume({
-    componentName: 'SpeakerVolume',
+    componentName: 'Gain',
     controlName: 'gain',
     min: -60,
     max: 0,
     step: 5
   })
   const { state: isMuted, toggle: toggleMute } = useToggle({
-    componentName: 'SpeakerVolume',
+    componentName: 'Gain',
     controlName: 'mute'
   })
 

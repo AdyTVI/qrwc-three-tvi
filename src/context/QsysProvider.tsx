@@ -27,7 +27,11 @@ function QsysProvider({ children }: { children: React.ReactNode }) {
         }));
       },
       (qrwc: Qrwc) => {
-        setComponents(qrwc.components);
+        console.log(qrwc.components);
+        setComponents(prevState=>({
+          ...prevState,
+          ...qrwc.components
+        }));
         setIsConnected(true);
       },
       () => {
